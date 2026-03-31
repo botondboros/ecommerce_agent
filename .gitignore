@@ -1,0 +1,34 @@
+# Credentials — never commit
+.env
+*.env
+
+# Bot Chrome profile — contains saved sessions
+bot_chrome_profile/
+
+# Generated output files
+bot_results.json
+decision.json
+cart_result.json
+bot_instructions.json
+grocery_results_view.html
+*.png
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

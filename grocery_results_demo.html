@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Grocery Agent — Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f7f5f0;--panel:#ffffff;--border:#e8e2d8;--ink:#1a1612;
+  --ink2:#3d3629;--muted:#8a7f72;--muted2:#b5a898;
+  --gold:#c8962a;--gold2:#f0b84a;--gold-bg:#fdf8ee;
+  --green:#2a7a4a;--green-bg:#edf7f1;
+  --red:#c8342a;--red-bg:#fff0ef;
+  --blue:#2a5ab8;--blue-bg:#f0f4ff;
+  --shadow:rgba(26,22,18,.07);
+  --fd:'Fraunces',Georgia,serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px}
+header{background:var(--ink);color:#fdf8f0;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.h-left{display:flex;align-items:center;gap:12px}
+.h-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#f0b84a,#c8962a);display:flex;align-items:center;justify-content:center;font-size:17px}
+.h-title{font-family:var(--fd);font-size:18px;font-weight:600;font-style:italic}
+.h-sub{font-size:9px;color:rgba(253,248,240,.4);font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.h-right{display:flex;gap:8px;align-items:center}
+.pill{padding:4px 10px;border-radius:20px;font-family:var(--fm);font-size:9px;letter-spacing:.05em}
+.p-gold{background:rgba(200,150,42,.2);color:#f0b84a;border:1px solid rgba(200,150,42,.3)}
+.p-green{background:rgba(42,122,74,.2);color:#5dba7a;border:1px solid rgba(42,122,74,.3)}
+.p-muted{background:rgba(255,255,255,.07);color:rgba(253,248,240,.4);border:1px solid rgba(255,255,255,.1)}
+main{max-width:1080px;margin:0 auto;padding:22px 18px 60px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px var(--shadow)}
+.card-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.card-title{font-family:var(--fd);font-size:14px;font-weight:600;font-style:italic;color:var(--ink2)}
+.card-body{padding:18px}
+
+/* Winner */
+.winner-wrap{background:linear-gradient(135deg,var(--gold-bg),#fffdf5);border:1.5px solid rgba(200,150,42,.25);border-radius:16px;padding:22px 26px;display:flex;gap:20px;box-shadow:0 4px 20px rgba(200,150,42,.1)}
+.wb-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:white;font-family:var(--fm);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.wb-title{font-family:var(--fd);font-size:22px;font-weight:700;margin-bottom:6px}
+.wb-reason{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:10px}
+.wb-summary{font-size:11px;color:var(--muted);line-height:1.65;border-top:1px solid rgba(200,150,42,.2);padding-top:10px}
+.wb-stats{display:flex;flex-direction:column;gap:8px;flex-shrink:0;min-width:120px}
+.wb-stat{background:white;border:1px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center}
+.wb-stat .v{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--green);line-height:1}
+.wb-stat .l{font-size:8px;color:var(--muted);font-family:var(--fm);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+/* Meta cards */
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.meta-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.meta-icon{font-size:20px}
+.meta-v{font-family:var(--fd);font-size:17px;font-weight:700;line-height:1}
+.meta-l{font-size:8px;color:var(--muted);font-family:var(--fm);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+
+/* Store grid */
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sc{background:var(--panel);border:1.5px solid var(--border);border-radius:13px;padding:15px}
+.sc.win{border-color:var(--gold);background:var(--gold-bg);box-shadow:0 3px 14px rgba(200,150,42,.12)}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.sc-name-row{display:flex;align-items:center;gap:7px}
+.sc-logo{font-size:17px}.sc-name{font-weight:600;font-size:12px}
+.sc-big{font-family:var(--fd);font-size:24px;font-weight:800;line-height:1}
+.sc-big.win{color:var(--green)}.sc-big.lose{color:var(--muted2)}
+.br{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.bl{font-size:7px;font-family:var(--fm);color:var(--muted);width:48px;text-transform:uppercase;letter-spacing:.04em}
+.bt{flex:1;height:5px;background:#ede9e2;border-radius:3px;overflow:hidden}
+.bf{height:100%;border-radius:3px;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.bn{font-size:8px;font-family:var(--fm);color:var(--muted);width:20px;text-align:right}
+.sc-div{height:1px;background:var(--border);margin:9px 0}
+.sc-lbl{font-size:7px;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.slot-chip{display:inline-block;font-size:8px;font-family:var(--fm);padding:2px 7px;border-radius:6px;background:var(--green-bg);color:var(--green);border:1px solid rgba(42,122,74,.2);margin:2px 2px 0 0}
+.no-slot{font-size:9px;color:var(--muted2);font-family:var(--fm)}
+.sc-link{font-size:8px;font-family:var(--fm);text-decoration:none;margin-top:8px;display:inline-block}
+
+/* Price comparison */
+.pbar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pbar-store{display:flex;align-items:center;gap:6px;width:115px;flex-shrink:0}
+.pbar-logo{font-size:14px}.pbar-name{font-size:11px;font-weight:600}
+.pbar-track{flex:1;background:#f0ebe2;border-radius:7px;height:24px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:7px;display:flex;align-items:center;padding:0 8px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.pbar-val{font-family:var(--fm);font-size:9px;font-weight:700;color:white;white-space:nowrap}
+.pbar-meta{width:110px;flex-shrink:0;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.pbar-amt{font-family:var(--fd);font-size:12px;font-weight:700}
+.dtag{font-size:7px;font-family:var(--fm);padding:1px 5px;border-radius:5px}
+.dbest{background:var(--green-bg);color:var(--green)}
+.dmore{background:var(--red-bg);color:var(--red)}
+.price-note{font-size:11px;color:var(--ink2);line-height:1.6;padding:10px 14px;background:var(--gold-bg);border-radius:9px;border-left:3px solid var(--gold2);margin-bottom:14px}
+
+/* Item table */
+.item-table{width:100%;border-collapse:collapse}
+.item-table th{background:#f0ebe2;font-size:8px;font-family:var(--fm);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 14px;text-align:left;font-weight:500}
+.item-table td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:12px}
+.item-table tr:last-child td{border-bottom:none}
+.item-table tr:hover td{background:#fdfaf5}
+.i-name{font-weight:600}.i-brand-pref{color:var(--blue);font-style:italic}.i-brand-rec{color:var(--ink2)}
+.qb{display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;font-size:8px;font-family:var(--fm);font-weight:600;white-space:nowrap}
+.q5{background:#fdf3e0;color:#b8700a;border:1px solid rgba(184,112,10,.2)}
+.q4{background:var(--green-bg);color:var(--green);border:1px solid rgba(42,122,74,.2)}
+.q3{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(42,90,184,.2)}
+.q2{background:#f5f5f5;color:var(--muted);border:1px solid var(--border)}
+.q1{background:var(--red-bg);color:var(--red);border:1px solid rgba(200,52,42,.2)}
+.why{font-size:10px;color:var(--muted);line-height:1.4}
+.fb-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(42,122,74,.2)}
+.fb-miss{background:var(--red-bg);color:var(--red);border:1px solid rgba(200,52,42,.2)}
+.fb-na{background:#f5f5f5;color:var(--muted);border:1px solid var(--border)}
+.found-badge{font-size:8px;font-family:var(--fm);padding:1px 7px;border-radius:5px}
+
+/* Warning */
+.warn{background:#fff8ed;border:1px solid rgba(200,150,42,.3);border-radius:10px;padding:11px 15px;font-size:11px;color:#8a6020;display:flex;gap:8px}
+
+/* Empty */
+.empty{text-align:center;padding:80px 20px}
+.empty-icon{font-size:48px;opacity:.2;margin-bottom:14px}
+.empty-title{font-family:var(--fd);font-size:20px;color:var(--muted);font-style:italic}
+.empty-sub{font-size:11px;color:var(--muted2);margin-top:6px;font-family:var(--fm)}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-left">
+    <div class="h-icon">🛒</div>
+    <div><div class="h-title">Grocery Agent</div><div class="h-sub">Weekly Comparison · Kifli · Auchan · Tesco</div></div>
+  </div>
+  <div class="h-right">
+    <span class="pill p-muted" id="h-ts">–</span>
+    <span class="pill p-gold" id="h-cost">API: –</span>
+    <span class="pill p-green" id="h-winner">–</span>
+  </div>
+</header>
+<main id="app">
+  <div class="empty"><div class="empty-icon">⏳</div><div class="empty-title">Loading…</div><div class="empty-sub">python build_results.py</div></div>
+</main>
+<script>
+const S={kifli:{name:'Kifli.hu',logo:'🥐',color:'#d97706',url:'https://www.kifli.hu'},auchan:{name:'Auchan Online',logo:'🟠',color:'#e55a00',url:'https://www.auchan.hu'},tesco:{name:'Tesco Online',logo:'🛒',color:'#c41230',url:'https://bevasarlas.tesco.hu'}};
+const BC={price:'#2a7a4a',delivery:'#2a5ab8',quality:'#9a4ab8'};
+const QL={5:'★ Premium',4:'★ Very Good',3:'Good',2:'Acceptable',1:'Budget'};
+const QC={5:'q5',4:'q4',3:'q3',2:'q2',1:'q1'};
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function apiCost(){const u=(2000/1e6*3)+(600/1e6*15);return{usd:u.toFixed(4),huf:Math.round(u*385)}}
+
+function render(dec,bot,instr){
+  const w=dec.winner, wm=S[w]||{name:w,logo:'🏪',color:'#888'};
+  const tot=dec.totals||{}, sc=dec.scores||{}, slots=dec.all_slots||{};
+  const cost=apiCost();
+  const ts=dec.timestamp?new Date(dec.timestamp).toLocaleString('hu-HU'):'–';
+
+  document.getElementById('h-ts').textContent=ts;
+  document.getElementById('h-cost').textContent=`API: ~$${cost.usd}`;
+  document.getElementById('h-winner').textContent=`Winner: ${wm.name}`;
+
+  const wProds=(bot?.stores?.[w]?.products)||[];
+  const found=wProds.filter(p=>p.found!==false).length;
+  const items=[...new Set((dec.recommendations||[]).map(r=>r.item))].length;
+
+  // ── Winner banner ────────────────────────────────────────────────────────
+  const banner=`
+  <div class="winner-wrap">
+    <div style="flex:1">
+      <div class="wb-badge">${wm.logo} ${wm.name} · Best match</div>
+      <div class="wb-title">This week: ${e(wm.name)}</div>
+      <div class="wb-reason">${e(dec.winner_reason||'')}</div>
+      ${dec.ai_summary?`<div class="wb-summary">${e(dec.ai_summary)}</div>`:''}
+    </div>
+    <div class="wb-stats">
+      <div class="wb-stat"><div class="v">${sc[w]?.total||'–'}/100</div><div class="l">Score</div></div>
+      <div class="wb-stat"><div class="v">${sc[w]?.delivery||'–'}</div><div class="l">Delivery</div></div>
+      <div class="wb-stat"><div class="v">${sc[w]?.quality||'–'}</div><div class="l">Quality</div></div>
+    </div>
+  </div>`;
+
+  // ── Meta ─────────────────────────────────────────────────────────────────
+  const meta=`
+  <div class="meta-grid">
+    <div class="meta-card"><div class="meta-icon">📋</div><div><div class="meta-v">${items}</div><div class="meta-l">Items requested</div></div></div>
+    <div class="meta-card"><div class="meta-icon">🏪</div><div><div class="meta-v">3</div><div class="meta-l">Stores compared</div></div></div>
+    <div class="meta-card"><div class="meta-icon">✓</div><div><div class="meta-v">${wProds.length?found+'/'+wProds.length:'–'}</div><div class="meta-l">Products found</div></div></div>
+    <div class="meta-card"><div class="meta-icon">💰</div><div><div class="meta-v">~$${cost.usd}</div><div class="meta-l">API cost ≈${cost.huf} Ft</div></div></div>
+  </div>`;
+
+  // ── Warnings ─────────────────────────────────────────────────────────────
+  const warns=[];
+  const missed=wProds.filter(p=>p.found===false);
+  if(missed.length) warns.push(`${missed.length} item(s) not found on ${wm.name}: ${missed.map(p=>p.query).join(', ')}`);
+  if(!dec.winner_slots?.length) warns.push('No delivery slots scraped — check manually on the store website.');
+  if(Object.values(tot).every(v=>!v)) warns.push('Cart totals not scraped — price comparison uses AI estimates.');
+  const warnHtml=warns.map(w=>`<div class="warn">⚠️ <span>${e(w)}</span></div>`).join('');
+
+  // ── Store cards ───────────────────────────────────────────────────────────
+  const storeCols=Object.keys(S).map(sid=>{
+    const sm=S[sid]; const ssc=sc[sid]||{}; const isW=sid===w;
+    const avSlots=(slots[sid]||[]).filter(x=>x.available).slice(0,3);
+    const sp=(bot?.stores?.[sid]?.products)||[];
+    const sf=sp.filter(p=>p.found!==false).length;
+    const bars=['price','delivery','quality'].map(k=>`
+      <div class="br"><span class="bl">${k}</span>
+        <div class="bt"><div class="bf" style="width:${ssc[k]||0}%;background:${BC[k]}"></div></div>
+        <span class="bn">${ssc[k]||0}</span></div>`).join('');
+    return `
+    <div class="sc ${isW?'win':''}">
+      <div class="sc-top">
+        <div class="sc-name-row"><span class="sc-logo">${sm.logo}</span><span class="sc-name">${sm.name}</span>${isW?' 👑':''}</div>
+        <div class="sc-big ${isW?'win':'lose'}">${ssc.total||'–'}</div>
+      </div>
+      ${bars}
+      <div style="display:flex;align-items:center;gap:7px;margin-top:7px">
+        <span style="font-size:7px;font-family:var(--fm);color:${sm.color};font-weight:700;text-transform:uppercase">Total</span>
+        <div class="bt" style="flex:1"><div class="bf" style="width:${ssc.total||0}%;background:${sm.color}"></div></div>
+        <span style="font-size:9px;font-family:var(--fm);color:${sm.color};font-weight:700">${ssc.total||0}</span>
+      </div>
+      <div class="sc-div"></div>
+      <div class="sc-lbl">Delivery slots</div>
+      ${avSlots.length
+        ? avSlots.map(s=>`<span class="slot-chip">${e(s.label.slice(0,28))}</span>`).join('')
+        : `<span class="no-slot">Not scraped</span>`}
+      ${sp.length?`<div style="font-size:9px;font-family:var(--fm);color:var(--muted2);margin-top:6px">Products: <b style="color:var(--green)">${sf}</b>/${sp.length} found</div>`:''}
+      ${tot[sid]?`<div style="font-size:9px;font-family:var(--fm);color:var(--muted2);margin-top:3px">Cart: ~${tot[sid].toLocaleString()} Ft</div>`:''}
+      <a href="${sm.url}" target="_blank" class="sc-link" style="color:${sm.color}">→ Open ${sm.name}</a>
+    </div>`;
+  }).join('');
+
+  // ── Price bars ────────────────────────────────────────────────────────────
+  const priceStores=Object.keys(S).filter(s=>tot[s]>0);
+  let priceSect='';
+  if(priceStores.length){
+    const mx=Math.max(...priceStores.map(s=>tot[s]));
+    const mn=Math.min(...priceStores.map(s=>tot[s]));
+    const sorted=[...priceStores].sort((a,b)=>tot[a]-tot[b]);
+    const s1=w&&tot[w]?(tot[w]===mn?`${wm.name} has the lowest basket price at ${tot[w].toLocaleString()} Ft.`:`${wm.name} is ${Math.round((tot[w]-mn)/mn*100)}% above cheapest, but wins on delivery & quality.`):'Prices are AI-estimated (not scraped).';
+    const s2=dec.winner_reason?dec.winner_reason.split('.')[0]+'.':'';
+    const pbars=sorted.map(sid=>{
+      const sm=S[sid]||{name:sid,logo:'🏪',color:'#888'};
+      const amt=tot[sid], pct=Math.round(amt/mx*100), isW=sid===w;
+      const diff=amt-mn;
+      const tag=diff===0?`<span class="dtag dbest">Cheapest</span>`:`<span class="dtag dmore">+${Math.round(diff/mn*100)}%</span>`;
+      return `<div class="pbar-row">
+        <div class="pbar-store"><span class="pbar-logo">${sm.logo}</span><span class="pbar-name">${sm.name}</span></div>
+        <div class="pbar-track"><div class="pbar-fill" style="width:${pct}%;background:${isW?sm.color:'#c8b896'}"><span class="pbar-val">${amt.toLocaleString()} Ft</span></div></div>
+        <div class="pbar-meta"><span class="pbar-amt" style="color:${isW?'var(--green)':'var(--muted)'}">${amt.toLocaleString()} Ft</span>${tag}${isW?'<span style="font-size:10px">👑</span>':''}</div>
+      </div>`;
+    }).join('');
+    priceSect=`
+    <div class="card">
+      <div class="card-head"><span class="card-title">Basket Price Comparison</span></div>
+      <div class="card-body">
+        <div class="price-note">${e(s1)}${s2?' '+e(s2):''}</div>
+        ${pbars}
+      </div>
+    </div>`;
+  }
+
+  // ── Item table ────────────────────────────────────────────────────────────
+  const iMap={};(instr||[]).forEach(i=>{iMap[i.original_query]=i;});
+  const pMap={};wProds.forEach(p=>{pMap[p.query]=p;});
+  const seen=new Set();
+  const uRecs=(dec.recommendations||[]).filter(r=>{if(seen.has(r.item))return false;seen.add(r.item);return true;});
+  const tRows=uRecs.map(r=>{
+    const ins=iMap[r.item]||{};
+    const prod=pMap[r.item]||{};
+    const q=r.quality||ins.quality_score;
+    const brand=r.preferred_brand
+      ?`<span class="i-brand-pref">${e(r.preferred_brand)} ★</span>`
+      :`<span class="i-brand-rec">${e(ins.recommended_brand||r.found||'–')}</span>`;
+    const qb=q?`<span class="qb ${QC[q]||'q3'}">${QL[q]||q+'/5'}</span>`:'–';
+    const why=ins.notes||(ins.recommended_brand?`AI pick: ${ins.recommended_brand}`:'');
+    const fb=prod.found===false
+      ?`<span class="found-badge fb-miss">Not found</span>`
+      :prod.name?`<span class="found-badge fb-ok" title="${e(prod.name)}">✓ Found</span>`
+      :`<span class="found-badge fb-na">–</span>`;
+    return `<tr>
+      <td><span class="i-name">${e(r.item)}</span></td>
+      <td>${brand}</td>
+      <td>${qb}</td>
+      <td><span class="why">${e(why)}</span></td>
+      <td>${fb}</td>
+    </tr>`;
+  }).join('');
+
+  const tableSect=`
+  <div class="card">
+    <div class="card-head"><span class="card-title">Shopping Intelligence · ${e(wm.name)}</span>
+      <span style="font-size:9px;font-family:var(--fm);color:var(--muted);margin-left:auto">★ = your preference</span>
+    </div>
+    <table class="item-table">
+      <thead><tr><th>Item</th><th>Recommended</th><th>Quality</th><th>Why selected</th><th>Found?</th></tr></thead>
+      <tbody>${tRows||'<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">No data</td></tr>'}</tbody>
+    </table>
+  </div>`;
+
+  document.getElementById('app').innerHTML=banner+meta+warnHtml+`
+    <div class="card">
+      <div class="card-head"><span class="card-title">Store Comparison</span></div>
+      <div class="card-body"><div class="store-grid">${storeCols}</div></div>
+    </div>`+priceSect+tableSect;
+}
+
+async function loadData(){
+  try{
+    if(!window._DECISION) throw new Error('No data — run: python build_results.py');
+    render(window._DECISION,window._BOT_RESULTS,window._INSTRUCTIONS);
+  }catch(e){
+    document.getElementById('app').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Error</div><div class="empty-sub">${e.message}</div></div>`;
+  }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadData);
+else loadData();
+</script>
+<script>
+
+window._DECISION     = {"winner": "auchan", "winner_reason": "Auchan scores highest with the best balance of competitive pricing (72), solid delivery reliability (65), and good product quality (63) across your shopping list.", "ai_summary": "Auchan emerged as the optimal choice with a total score of 70, offering competitive pricing on everyday staples while maintaining reliable same-day delivery. Lurpak butter and Farm Prémium eggs were found at strong value — the pasta and dairy categories are particularly well covered. For premium coffee, consider checking Kifli's specialty selection next time if you want Illy or Lavazza specifically, as Auchan's coffee range skews toward store brands.", "scores": {"auchan": {"price": 72, "delivery": 65, "quality": 63, "coverage": 85, "total": 70}, "kifli": {"price": 55, "delivery": 75, "quality": 69, "coverage": 80, "total": 67}, "tesco": {"price": 78, "delivery": 55, "quality": 54, "coverage": 75, "total": 60}}, "totals": {"auchan": 5414, "kifli": 6230, "tesco": 4980}, "all_slots": {"auchan": [{"label": "április 01. (szerda) 08:00–21:00", "available": true}], "kifli": [], "tesco": []}, "winner_slots": [{"label": "április 01. (szerda) 08:00–21:00", "available": true}], "recommendations": [{"item": "pasta", "quality": 4, "found": "Gyermelyi Vita Pasta Reginelle", "preferred_brand": null}, {"item": "tej", "quality": 3, "found": "Auchan Kedvenc UHT tej 2,8% 1 l", "preferred_brand": null}, {"item": "tojás", "quality": 5, "found": "Farm Prémium GMO mentes tojás M10", "preferred_brand": null}, {"item": "vaj", "quality": 4, "found": "Lurpak enyhén sózott dán vaj 200 g", "preferred_brand": null}, {"item": "kávé", "quality": 5, "found": null, "preferred_brand": null}], "timestamp": "2025-03-31T15:14:54"};
+window._BOT_RESULTS  = {"stores": {"auchan": {"products": [{"query": "pasta", "found": true, "name": "Gyermelyi Vita Pasta Reginelle durum száraztészta 500g", "price": "719 Ft"}, {"query": "tej", "found": true, "name": "Auchan Kedvenc UHT tej 2,8% 1 l", "price": "294 Ft"}, {"query": "tojás", "found": true, "name": "Farm Prémium GMO mentes farm tojás M 10db", "price": "1004 Ft"}, {"query": "vaj", "found": true, "name": "Lurpak enyhén sózott dán vaj 200 g", "price": "1198 Ft"}, {"query": "kávé", "found": false, "name": null, "price": null}]}, "kifli": {"products": []}, "tesco": {"products": []}}};
+window._INSTRUCTIONS = [{"original_query": "pasta", "recommended_brand": "De Cecco", "quality_score": 5, "notes": "Bronze-die extrusion, holds al dente perfectly. Rummo is equally good — pick whichever is cheaper.", "fallback_terms": ["Rummo pasta", "Barilla pasta"]}, {"original_query": "tej", "recommended_brand": "Organic bio (any brand)", "quality_score": 4, "notes": "Organic certified, better taste and animal welfare. Natumi is equally good.", "fallback_terms": ["bio tej"]}, {"original_query": "tojás", "recommended_brand": "Organic free-range bio", "quality_score": 5, "notes": "Best welfare, richest yolk, superior taste.", "fallback_terms": ["szabad tartású tojás"]}, {"original_query": "vaj", "recommended_brand": "Kerrygold", "quality_score": 5, "notes": "Irish grass-fed, golden colour, exceptional flavour. Lurpak is equally good.", "fallback_terms": ["Lurpak vaj"]}, {"original_query": "kávé", "recommended_brand": "Illy", "quality_score": 5, "notes": "Italian perfection, balanced blend. Lavazza Super Crema equally good.", "fallback_terms": ["Lavazza kávé", "espresso kávé"]}];
+window.loadData = async function() {
+  try {
+    render(window._DECISION, window._BOT_RESULTS, window._INSTRUCTIONS);
+  } catch(e) {
+    document.getElementById('app').innerHTML = '<div class="empty"><div class="empty-title">Error: ' + e.message + '</div></div>';
+  }
+};
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadData);
+else loadData();
+
+</script>
+</body>
+</html>
