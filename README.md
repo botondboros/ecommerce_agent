@@ -1,5 +1,5 @@
 🛒 Grocery Agent
-> **AI-powered weekly grocery comparison across Kifli.hu, Auchan Online and Tesco Online**  
+> AI-powered weekly grocery comparison across Kifli.hu, Auchan Online and Tesco Online  
 > Scrapes prices → AI scores stores → fills cart automatically → visual dashboard
 ---
 What it does
@@ -20,8 +20,7 @@ run.py                      ← pipeline entry point
 ├── grocery_agent.py        ← 4-dimension scoring + Claude API decision layer
 ├── cart_filler.py          ← Playwright cart automation
 └── build_results.py        ← embeds JSON into HTML dashboard
-```
-```
+
 setup_bot_profile.py        ← one-time: save login sessions to Chrome profile
 setup_scheduler.py          ← register Windows Task Scheduler for weekly runs
 ```
@@ -44,7 +43,7 @@ Playwright — browser automation (Chromium)
 Claude API (`claude-sonnet-4`) — store scoring rationale + shopping intelligence
 Vanilla HTML/CSS/JS — results dashboard (no framework)
 python-dotenv — credentials management
-Windows Task Scheduler — weekly automation (via `setup_scheduler.py`)
+Windows Task Scheduler — weekly automation
 ---
 Setup
 1. Install dependencies
@@ -73,17 +72,6 @@ python build_results.py   # opens visual dashboard
 python setup_scheduler.py --day MON --time 09:00
 ```
 ---
-.env format
-```env
-KIFLI_EMAIL=your@email.com
-KIFLI_PASSWORD=yourpassword
-AUCHAN_EMAIL=your@email.com
-AUCHAN_PASSWORD=yourpassword
-TESCO_EMAIL=your@email.com
-TESCO_PASSWORD=yourpassword
-ANTHROPIC_API_KEY=sk-ant-...
-```
----
 Dashboard
 After a run, `python build_results.py` generates `grocery_results_view.html` — a self-contained file with all data embedded inline (no server needed):
 Winner banner with AI rationale
@@ -102,8 +90,5 @@ Tesco scraping	⚠️ guest mode
 Delivery slot scraping	🔄 partial
 Weekly scheduler	✅ working
 Visual dashboard	✅ working
----
-Methodology note
-This is a portfolio project demonstrating AI + browser automation for personal productivity. The brand quality database (`product_intelligence.py`) is opinionated and based on publicly available product reviews and category knowledge. Store scores use real scraped data when available; otherwise fall back to market knowledge baselines.
 ---
 Built by Botond Boros · March 2025
