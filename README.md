@@ -2,14 +2,15 @@
 > AI-powered weekly grocery comparison across Kifli.hu, Auchan Online and Tesco Online  
 > Scrapes prices → AI scores stores → fills cart automatically → visual dashboard
 ---
-What it does
+
 Every week, this agent:
-Takes your shopping list as input
-Scrapes all 3 Hungarian online grocery stores simultaneously (Playwright)
-Scores each store across 4 dimensions — price, delivery, quality, coverage
-Uses Claude API to generate a natural-language summary and winner rationale
-Fills the winning store's cart automatically
-Renders a visual HTML dashboard with the full comparison
+- Takes your shopping list as input
+- Scrapes all 3 Hungarian online grocery stores simultaneously (Playwright)
+- Scores each store across 4 dimensions — price, delivery, quality, coverage
+- Uses Claude API to generate a natural-language summary and winner rationale
+- Fills the winning store's cart automatically
+- Renders a visual HTML dashboard with the full comparison
+
 Result: You open the browser, review the pre-filled cart, and click pay.
 ---
 Architecture
@@ -26,24 +27,22 @@ setup_scheduler.py          ← register Windows Task Scheduler for weekly runs
 ```
 ---
 Scoring model
-Dimension	Weight	Source
-Price	35%	scraped cart total (fallback: market knowledge base)
-Delivery	30%	scraped slot availability + speed baseline
-Quality	20%	brand quality DB × store premium multiplier
-Coverage	15%	% of items found × category breadth score
-Base scores (no scraped prices):
-Store	Price	Delivery	Quality	Coverage	Total
-Auchan	72	65	63	85	70
-Kifli	55	75	69	80	67
-Tesco	78	55	54	75	65
+
+- Dimension	Weight	Source
+- Price	35%	scraped cart total (fallback: market knowledge base)
+- Delivery	30%	scraped slot availability + speed baseline
+- Quality	20%	brand quality DB × store premium multiplier
+- Coverage	15%	% of items found × category breadth score
+
 ---
 Tech stack
-Python 3.12+
-Playwright — browser automation (Chromium)
-Claude API (`claude-sonnet-4`) — store scoring rationale + shopping intelligence
-Vanilla HTML/CSS/JS — results dashboard (no framework)
-python-dotenv — credentials management
-Windows Task Scheduler — weekly automation
+
+- Python 3.12+
+- Playwright — browser automation (Chromium)
+- Claude API (`claude-sonnet-4`) — store scoring rationale + shopping intelligence
+- Vanilla HTML/CSS/JS — results dashboard (no framework)
+- python-dotenv — credentials management
+- Windows Task Scheduler — weekly automation
 ---
 Setup
 1. Install dependencies
@@ -71,24 +70,5 @@ python build_results.py   # opens visual dashboard
 ```bash
 python setup_scheduler.py --day MON --time 09:00
 ```
----
-Dashboard
-After a run, `python build_results.py` generates `grocery_results_view.html` — a self-contained file with all data embedded inline (no server needed):
-Winner banner with AI rationale
-Store comparison — score bars, delivery slots, products found
-Basket price comparison — side-by-side bar chart
-Shopping intelligence table — item · recommended brand · quality score · why selected
-API cost tracker — per-run cost in USD and HUF
----
-Project status
-Feature	Status
-Auchan scraping	✅ working
-Auchan cart fill	✅ working
-Kifli scraping	⚠️ guest mode (login WIP)
-Kifli cart fill	⚠️ in progress
-Tesco scraping	⚠️ guest mode
-Delivery slot scraping	🔄 partial
-Weekly scheduler	✅ working
-Visual dashboard	✅ working
 ---
 Built by Botond Boros · March 2025
